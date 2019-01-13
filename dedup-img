@@ -1,0 +1,31 @@
+#!/bin/bash
+
+IFS=$'\n'; # necessary for loop to handle spaces
+s=0; # initial value for freed space
+hash=''; # invalid initial hash value
+# get every file in given directories and subdirectories, calculate HASH of image without meta data and print hash, size of file and path.
+for f in $(find -H "$@" -type f -exec bash -c 'file="{}"; echo -n $(exiftool -all= -o - "$file" 2> /dev/null | sha512sum | cut -c 1-128)' \; -printf "\t%s\t%p\n" |
+# sort the output by hash and descending size
+sort -k1,2r |
+# remove rows with unique hashes and keep all rows with repeated hashes
+uniq -w128 --all-repeated=separate);
+# for every entry in output set sha to hash value of a file 
+do sha=$(echo "$f" | cut -f 1);
+# and path to the path of a file
+path=$(echo "$f" | cut -f 3);
+# if hash of last file equals hash of current file
+if [ "$hash" == "$sha" ];
+# then add size of file to s
+then s=$(($s+$(stat --printf="%s" $path)));
+# remove file
+rm "$path";
+# and print, that file was removed
+echo "removed $path";
+# else set hash to the new hash value, that is the first hash of new group of redundant files
+else hash=$sha;
+# print: keep file (this file may have the most meta-data, because it has the biggest size and the picture is identical)
+echo "keep $path";
+fi;
+done;
+# prints how many bytes could be freed
+echo "$s Byte more free space";
