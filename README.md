@@ -1,2 +1,5 @@
 # DeDup-Image
-Deduplizierung von Bildern im Dateisystem
+Deletes duplicate image files
+
+## Usage
+dedup-img PATH1 [PATH2 [...]]
