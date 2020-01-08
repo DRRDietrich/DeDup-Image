@@ -5,4 +5,4 @@ Deletes duplicate image files
 dedup-img PATH1 [PATH2 [...]]
 
 ## Legacy Geek Code
-O++S++I+CEM+V+!PSD++
+O++S++I+CEM+V+!PSD+
