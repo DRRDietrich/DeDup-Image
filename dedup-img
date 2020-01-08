@@ -5,7 +5,7 @@ s=0; # initial value for freed space
 hash=''; # invalid initial hash value
 # get every file in given directories and subdirectories, calculate HASH of image without meta data and print hash, size of file and path.
 for f in $(find -H "$@" -type f -exec bash -c 'file="{}"; echo -n $(exiftool -all= -o - "$file" 2> /dev/null | sha512sum | cut -c 1-128)' \; -printf "\t%s\t%p\n" |
-# ignore not supported files (sha512sum of empty string)
+# ignore unsupported files (sha512sum of empty string)
 grep -v "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e" |
 # sort the output by hash and descending size
 sort -k1,2r |
